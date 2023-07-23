@@ -2,8 +2,9 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl"
 >   
-	<xsl:preserve-space elements="desc" />
-    <xsl:template match="npc">
+  <xsl:preserve-space elements="desc" />
+
+<xsl:template match="npc">
 		<xsl:for-each select="category">
 # <xsl:value-of select="./@name" />
 		<xsl:for-each select="./*">
@@ -135,102 +136,13 @@ ___
 <xsl:if test="text">
 \page
 
-{{note,wide
 <xsl:apply-templates select="text/*" />
-}}
+
 </xsl:if>
 \page
 	</xsl:for-each>
 </xsl:for-each>
 </xsl:template>
 
-<xsl:template match="p">
-<xsl:apply-templates select="* | text()"/><xsl:text>
-
-</xsl:text>
-</xsl:template>
-
-<xsl:template match="h">
-<xsl:text>##### </xsl:text><xsl:apply-templates select="* | text()"/><xsl:text>
-
-</xsl:text>
-</xsl:template>
-
-<xsl:template match="b">
-<xsl:text> **</xsl:text><xsl:apply-templates select="* | text()"/><xsl:text>** </xsl:text>
-</xsl:template>
-
-<xsl:template match="*/i[not(self::b)]">
-<xsl:text> _</xsl:text><xsl:apply-templates select="* | text()"/><xsl:text>_ </xsl:text>
-</xsl:template>
-
-<xsl:template match="b/i">
-<xsl:text>*</xsl:text><xsl:apply-templates select="* | text()"/><xsl:text>*</xsl:text>
-</xsl:template>
-
-<xsl:template match="linklist">
-<xsl:apply-templates select="link"/>
-</xsl:template>
-
-<xsl:template match="frame">
-{{descriptive,wide
-<xsl:apply-templates select="* | text()"/><xsl:text>
-</xsl:text>
-}}
-</xsl:template>
-
-<xsl:template match="text()">
-<xsl:value-of select="normalize-space(.)"/>
-</xsl:template>
-
-<xsl:template match="linklist/link[@class = 'power']">
-<xsl:text>
-</xsl:text>
-<xsl:apply-templates select="* | text()"/> (<xsl:value-of select="substring-after(@recordname, '@')" />)
-<xsl:text>
-</xsl:text>
-</xsl:template>
-
-<xsl:template match="linklist/link[@class = 'imagewindow']">
-<xsl:text>
-Image: </xsl:text>
-<xsl:apply-templates select="* | text()"/>
-<xsl:text>
-</xsl:text>
-</xsl:template>
-	
-<xsl:template name="markdown-code-block">
-<xsl:param name="input"/>
-<xsl:param name="value">
-	<xsl:choose>
-	<xsl:when test="contains($input,'&#xa;')">
-		<xsl:value-of select="substring-before($input,'&#xa;')"/>
-	</xsl:when>
-	<xsl:otherwise>
-		<xsl:value-of select="$input"/>
-	</xsl:otherwise>
-	</xsl:choose>
-</xsl:param>
-<xsl:param name="remaining-values" select="substring-after($input,'&#xa;')"/>
-<xsl:value-of select="substring-before($input,'&#xa;')"/><xsl:text>&#xa;    </xsl:text>
-<xsl:if test="$remaining-values != ''">
-	<xsl:call-template name="markdown-code-block">
-	<xsl:with-param name="input" select="$remaining-values"/>
-	</xsl:call-template>
-</xsl:if>
-</xsl:template>
-
-<xsl:template match="img" priority="1">
-<xsl:text>![</xsl:text>
-<xsl:value-of select="@alt"/>
-<xsl:text>](</xsl:text>
-<xsl:value-of select="@src"/>
-<xsl:if test="@title">
-	<xsl:text> "</xsl:text>
-	<xsl:value-of select="@title"/>
-	<xsl:text>"</xsl:text>
-</xsl:if>
-<xsl:text>)</xsl:text>
-</xsl:template>
 
 </xsl:stylesheet>
