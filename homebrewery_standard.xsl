@@ -2,105 +2,15 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl"
 >   
-  <xsl:import href="homebrewery_npcstatblock.xsl" />
   
 <xsl:preserve-space elements="desc" />
-<xsl:template match="/root">
-
-# Encounters
-<xsl:apply-templates select="encounter" />
-
----
-
-# Cast of Characters
-
-<xsl:apply-templates select="npc" />
-
----
-
-# Battles
-<xsl:apply-templates select="battle" />
-
-\page
----
-
-# Quests
-<xsl:apply-templates select="quest" />
-
-\page
----
-
-# Reference Manual
-<xsl:apply-templates select="reference/refmanualdata" />
-
----
-
-</xsl:template>
 
 <xsl:template match="category">
 ## <xsl:value-of select="@name" />
-  <xsl:apply-templates select="./*" />
-</xsl:template>
-
-<xsl:template match="battle/category/*">
-### Battle: <xsl:value-of select="name" />
-<xsl:text>
-
-</xsl:text>
-  *Challenge Rating <xsl:value-of select="cr" />, <xsl:value-of select="exp" /> XP*
-  <xsl:for-each select="npclist/*">
-    <xsl:choose><xsl:when test="contains(token, '@')">
-      <xsl:text>
-- </xsl:text>(<xsl:value-of select="substring-after(token, '@')" />)
-</xsl:when>
-<xsl:otherwise><xsl:text>
-![- ](</xsl:text>
-<xsl:value-of select="token"/>
-	<xsl:text> "</xsl:text>
-	<xsl:value-of select="name"/>
-	<xsl:text>"</xsl:text>
-<xsl:text>)</xsl:text> {width:60px,mix-blend-mode:multiply}</xsl:otherwise></xsl:choose> **<xsl:value-of select="count" /><xsl:text> </xsl:text><xsl:value-of select="name" />**<xsl:text>
-
-  </xsl:text>
-  </xsl:for-each>
-</xsl:template>
-
-<xsl:template match="encounter/category/*">
-### Encounter: <xsl:value-of select="name" />
-<xsl:text>
-
-</xsl:text>
-  <xsl:apply-templates select="text" />
-\page
-</xsl:template>
   
-<xsl:template match="quest/category/*">
-### Quest: <xsl:value-of select="name" /> (<xsl:value-of select="xp" /> XP)
-<xsl:text>
-
-</xsl:text>
-  <xsl:apply-templates select="description/*" /> 
+<xsl:apply-templates select="./*" />
 </xsl:template>
 
-<xsl:template match="reference/refmanualdata/*">
-### <xsl:value-of select="name" />
-  <xsl:for-each select="blocks/*">
-    <xsl:apply-templates select="image" /><xsl:text>
-
-</xsl:text><xsl:apply-templates select="text" />
-\page
-  </xsl:for-each>
-</xsl:template>
-
-<xsl:template match="blocks/*/image">
-  <xsl:for-each select="layers/layer">
-![IMAGE: <xsl:value-of select="name"/>](<xsl:value-of select="bitmap"/>)
-  </xsl:for-each>
-</xsl:template>
-
-<xsl:template match="blocks/*/text">
-  <xsl:apply-templates select="* | text()" />
-</xsl:template>
 
 <xsl:template match="p">
 <xsl:apply-templates select="* | text()"/><xsl:text>
@@ -159,7 +69,17 @@
 <xsl:text>
 </xsl:text>
 </xsl:template>
-	
+
+<xsl:template match="table">
+<xsl:text>
+|</xsl:text><xsl:for-each select="tr[position() = 1]/td"><xsl:text>   |</xsl:text></xsl:for-each><xsl:text>
+|</xsl:text><xsl:for-each select="tr[position() = 1]/td"><xsl:text>---|</xsl:text></xsl:for-each>
+<xsl:for-each select="tr"><xsl:text>
+| </xsl:text><xsl:for-each select="td">
+<xsl:apply-templates select="."/><xsl:text> | </xsl:text>
+</xsl:for-each></xsl:for-each>
+</xsl:template>
+
 <xsl:template name="markdown-code-block">
 <xsl:param name="input"/>
 <xsl:param name="value">
