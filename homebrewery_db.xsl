@@ -26,12 +26,15 @@
 # Quests
 <xsl:apply-templates select="quest" />
 
-
+\page
 ---
+
+# Log
+<xsl:apply-templates select="calendar" />
 
 </xsl:template>
 
-<xsl:template match="battle/category/*">
+<xsl:template match="battle/category/* | battle/*[not(self::category)]">
 ### Battle: <xsl:value-of select="name" />
 <xsl:text>
 
@@ -69,6 +72,37 @@
 
 </xsl:text>
   <xsl:apply-templates select="description/*" /> 
+</xsl:template>
+
+<xsl:template match="calendar">
+### Current Date: <xsl:value-of select="current/epoch" /><xsl:text> </xsl:text><xsl:value-of select="current/year" />:<xsl:value-of select="current/month" />:<xsl:value-of select="current/day" />
+
+### Holidays:
+
+<xsl:apply-templates select="data/periods/*" />
+
+### Log Entries:
+
+<xsl:apply-templates select="log/*[not(self::public)]" />
+
+</xsl:template>
+
+<xsl:template match="calendar/data/periods/*">
+#### <xsl:value-of select="name" /><xsl:text> </xsl:text>(<xsl:value-of select="days" /> days)
+
+<xsl:for-each select="holidays/*[not(self::public)]">
+##### <xsl:value-of select="name" />:<xsl:text> </xsl:text><xsl:value-of select="startday" /><xsl:text> (duration: </xsl:text><xsl:value-of select="duration" /><xsl:text>)</xsl:text>
+</xsl:for-each>
+
+\page
+</xsl:template>
+
+<xsl:template match="calendar/log">
+**<xsl:value-of select="name" /><xsl:text> </xsl:text><xsl:value-of select="year" /><xsl:text>:</xsl:text><xsl:value-of select="month" /><xsl:text>:</xsl:text><xsl:value-of select="day" />**
+
+<xsl:apply-templates select="logentry" />
+
+_<xsl:apply-templates select="gmlogentry" />_
 </xsl:template>
 
 <xsl:template match="npc">
