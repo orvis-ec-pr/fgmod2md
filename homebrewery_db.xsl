@@ -57,7 +57,7 @@
   </xsl:for-each>
 </xsl:template>
 
-<xsl:template match="encounter/category/* | encounter/*">
+<xsl:template match="encounter/category/* | encounter/*[starts-with(local-name(self), 'id')]">
 ### Encounter: <xsl:value-of select="name" />
 <xsl:text>
 

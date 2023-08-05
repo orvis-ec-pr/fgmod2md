@@ -63,7 +63,7 @@
 
 <xsl:template match="linklist/link">
 <xsl:text>
-- </xsl:text><xsl:value-of select="upper-case(@class)" />: <xsl:apply-templates select="* | text()" /> <xsl:choose>
+- </xsl:text>Link to <xsl:value-of select="upper-case(@class)" />: <xsl:apply-templates select="* | text()" /> <xsl:choose>
 <xsl:when test="contains(@recordname, '@')">(<xsl:value-of select="substring-after(@recordname, '@')" />)</xsl:when>
 </xsl:choose>
 <xsl:text>

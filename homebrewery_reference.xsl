@@ -22,9 +22,11 @@
 <xsl:template match="reference/refmanualdata/*">
 ### <xsl:value-of select="name" />
   <xsl:for-each select="blocks/*">
+    <xsl:sort select="order" />
+<xsl:apply-templates select=".[./blocktype='header']" />
     <xsl:apply-templates select="image" /><xsl:text>
 
-</xsl:text><xsl:apply-templates select="text" />
+</xsl:text><xsl:apply-templates select="./*[@type='formattedtext'],./*[starts-with(local-name(self), 'text')]" />
 \page
   </xsl:for-each>
 </xsl:template>
@@ -35,9 +37,12 @@
   </xsl:for-each>
 </xsl:template>
 
-<xsl:template match="blocks/*/text">
+<xsl:template match="blocks/*/*[@type='formattedtext']">
   <xsl:apply-templates select="* | text()" />
 </xsl:template>
 
+<xsl:template match="blocks/*[./blocktype='header']">
+#### <xsl:value-of select="./text" />
+</xsl:template>
 
 </xsl:stylesheet>
